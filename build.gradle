@@ -1,0 +1,42 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.5.10'
+    id 'com.github.johnrengelman.shadow' version '6.0.0'
+    id 'kr.entree.spigradle' version '1.2.4'
+    id "org.jetbrains.kotlin.kapt" version "1.5.10"
+}
+
+// Variables
+def buildLocation = "C:\\Users\\rdpol\\Documents\\GitHub\\Servers\\server 1.16.5\\plugins"
+
+// Properties
+group = 'me.rdpolarity.solaris'
+version = '1.0'
+spigotPluginYaml.enabled(false)
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+    maven { url "https://repo.aikar.co/content/groups/aikar/" }
+}
+
+dependencies {
+    implementation spigot("1.16.5")
+    implementation "co.aikar:acf-bukkit:0.5.0-SNAPSHOT"
+    implementation 'com.github.hazae41:mc-kutils:master-SNAPSHOT'
+    compileOnly 'org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT'
+    kapt 'org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT'
+}
+
+shadowJar {
+    relocate 'co.aikar.commands', 'me.rdpolarity.solaris.acf'
+    relocate 'co.aikar.locales', 'me.rdpolarity.solaris.locales'
+
+    archiveBaseName.set("Solaris")
+    archiveClassifier.set('')
+    archiveVersion.set('')
+    destinationDirectory.set(file(buildLocation))
+}
+
+jar {
+    destinationDirectory.set(file(buildLocation))
+}
