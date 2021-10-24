@@ -1,8 +1,8 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.5.10'
+    id "org.jetbrains.kotlin.kapt" version "1.5.31"
+    id 'org.jetbrains.kotlin.jvm' version '1.5.31'
     id 'com.github.johnrengelman.shadow' version '6.0.0'
     id 'kr.entree.spigradle' version '1.2.4'
-    id "org.jetbrains.kotlin.kapt" version "1.5.10"
 }
 
 // Variables
@@ -15,25 +15,34 @@ spigotPluginYaml.enabled(false)
 
 repositories {
     mavenCentral()
-    maven { url 'https://jitpack.io' }
+    maven { url "https://jitpack.io" }
     maven { url "https://repo.aikar.co/content/groups/aikar/" }
+    maven { url "https://repo.mattstudios.me/artifactory/public/" }
+    maven { url "https://repo.codemc.io/repository/maven-public"}
+    maven {
+        name = 'skullcreator-repo'
+        url = 'https://github.com/deanveloper/SkullCreator/raw/mvn-repo/'
+    }
 }
 
 dependencies {
     implementation spigot("1.16.5")
     implementation "co.aikar:acf-bukkit:0.5.0-SNAPSHOT"
-    implementation 'com.github.hazae41:mc-kutils:master-SNAPSHOT'
-    compileOnly 'org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT'
-    kapt 'org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT'
+    implementation "com.github.hazae41:mc-kutils:master-SNAPSHOT"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.5.31"
+    implementation "dev.triumphteam:triumph-gui:3.0.4"
+    implementation "com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.0"
+    implementation "org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT"
+    implementation "de.tr7zw:item-nbt-api-plugin:2.8.0"
+    kapt "org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT"
 }
 
 shadowJar {
-    relocate 'co.aikar.commands', 'me.rdpolarity.solaris.acf'
-    relocate 'co.aikar.locales', 'me.rdpolarity.solaris.locales'
+//    relocate 'co.aikar.commands', 'me.rdpolarity.solaris.acf'
+//    relocate 'co.aikar.locales', 'me.rdpolarity.solaris.locales'
 
     archiveBaseName.set("Solaris")
     archiveClassifier.set('')
-    archiveVersion.set('')
     destinationDirectory.set(file(buildLocation))
 }
 
