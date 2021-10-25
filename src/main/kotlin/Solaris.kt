@@ -1,7 +1,9 @@
 import co.aikar.commands.BukkitCommandManager
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI
 import commands.SolarisCommand
 import hazae41.minecraft.kutils.bukkit.*
 import managers.MapManager
+import org.bukkit.Bukkit
 //import LootChest
 //import kit.SpeedBoost
 import org.bukkit.plugin.java.annotation.plugin.ApiVersion
@@ -24,8 +26,15 @@ class Solaris : BukkitPlugin() {
             LootChest(),
             SpeedBoost()
         )
+
         val commandManager = BukkitCommandManager(this)
         commandManager.registerCommand(SolarisCommand())
         commandManager.registerCommand(MapManager.Commands())
+    }
+
+    companion object {
+        fun getPlugin(): org.bukkit.plugin.Plugin? {
+            return Bukkit.getPluginManager().getPlugin(Solaris::class.simpleName!!)
+        }
     }
 }

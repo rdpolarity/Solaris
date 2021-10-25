@@ -2,10 +2,16 @@ package Extensions
 
 import data.Constants
 import de.tr7zw.nbtapi.NBTBlock
+import de.tr7zw.nbtapi.NBTItem
 import org.bukkit.block.Block
+import org.bukkit.inventory.ItemStack
 
 fun Block.isGameObject() : Boolean {
     val nbt = NBTBlock(this)
-    nbt.data.keys.toString().broadcast()
     return nbt.data.hasKey(Constants.NBT.SOLARIS_KEY)
+}
+
+fun ItemStack.isGameObject() : Boolean {
+    val nbt = NBTItem(this)
+    return nbt.hasKey(Constants.NBT.SOLARIS_KEY)
 }
