@@ -34,6 +34,8 @@ dependencies {
     implementation "com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.0"
     implementation "org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT"
     implementation "de.tr7zw:item-nbt-api-plugin:2.8.0"
+    implementation 'com.elmakers.mine.bukkit:EffectLib:9.3'
+
     kapt "org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT"
 }
 

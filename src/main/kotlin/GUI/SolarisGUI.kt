@@ -9,6 +9,7 @@ import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.entity.Player
+import org.bukkit.event.inventory.InventoryType
 
 open class SolarisGUI(val title: String = "") {
     protected val gui: ScrollingGui = Gui.scrolling()
@@ -19,7 +20,9 @@ open class SolarisGUI(val title: String = "") {
     private var delegate: SolarisGUI? = null
 
     init {
-        gui.setDefaultClickAction { it.isCancelled = true }
+        gui.setDefaultClickAction {
+            if (it.clickedInventory?.type == InventoryType.CHEST) it.isCancelled = true
+        }
         gui.setBasicScrollTemplate()
         val closeText = "CLOSE".asComponent()
             .color(TextColor.color(255,0,0))

@@ -14,7 +14,7 @@ abstract class GameBehaviour {
     abstract var icon: Material
 
     open fun onGizmo() {
-        
+
     }
 
     inner class PropertiesGUI : SolarisGUI("$name Properties" ) {
