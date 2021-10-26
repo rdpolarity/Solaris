@@ -1,4 +1,4 @@
-package Extensions
+package extentions
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent

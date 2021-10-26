@@ -1,4 +1,4 @@
-package Extensions
+package extentions
 
 import data.Constants
 import de.tr7zw.nbtapi.NBTBlock

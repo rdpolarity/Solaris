@@ -1,11 +1,16 @@
+import co.aikar.commands.BaseCommand
 import co.aikar.commands.BukkitCommandManager
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI
-import commands.SolarisCommand
-import hazae41.minecraft.kutils.bukkit.*
+import co.aikar.commands.annotation.CommandAlias
+import co.aikar.commands.annotation.Default
+import co.aikar.commands.annotation.Subcommand
+import engine.objects.LootChest
+import engine.objects.SpeedBoost
+import hazae41.minecraft.kutils.bukkit.BukkitPlugin
+import hazae41.minecraft.kutils.bukkit.info
 import managers.MapManager
 import org.bukkit.Bukkit
-//import LootChest
-//import kit.SpeedBoost
+import org.bukkit.entity.Player
+import org.bukkit.plugin.java.annotation.command.Command
 import org.bukkit.plugin.java.annotation.plugin.ApiVersion
 import org.bukkit.plugin.java.annotation.plugin.Description
 import org.bukkit.plugin.java.annotation.plugin.Plugin
@@ -28,13 +33,32 @@ class Solaris : BukkitPlugin() {
         )
 
         val commandManager = BukkitCommandManager(this)
-        commandManager.registerCommand(SolarisCommand())
+        commandManager.registerCommand(Commands())
         commandManager.registerCommand(MapManager.Commands())
     }
 
     companion object {
         fun getPlugin(): org.bukkit.plugin.Plugin? {
             return Bukkit.getPluginManager().getPlugin(Solaris::class.simpleName!!)
+        }
+    }
+
+    @CommandAlias("solaris|se|sol")
+    @Command(
+        name = "Solaris",
+        desc = "Core command for solaris plugin",
+        aliases = ["solaris", "se", "sol"],
+        usage = "/<command>"
+    )
+    class Commands : BaseCommand() {
+
+        @Default
+        private fun onSolaris(player : Player) {
+        }
+
+        @Default
+        @Subcommand("test")
+        private fun onTest(player : Player) {
         }
     }
 }

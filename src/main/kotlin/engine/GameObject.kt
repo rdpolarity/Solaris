@@ -1,37 +1,47 @@
-import Extensions.asComponent
-import Extensions.broadcast
+package engine
+
+import extentions.asComponent
+import GUI.SolarisGUI
+import Solaris
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI
 import data.Constants
 import de.tr7zw.nbtapi.NBTBlock
 import de.tr7zw.nbtapi.NBTItem
 import dev.triumphteam.gui.builder.item.ItemBuilder
-import dev.triumphteam.gui.guis.Gui
 import dev.triumphteam.gui.guis.GuiItem
-import dev.triumphteam.gui.guis.PaginatedGui
 import hazae41.minecraft.kutils.bukkit.msg
-import net.kyori.adventure.text.Component
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.entity.Player
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.player.PlayerInteractEvent
 
-open class GameObject {
+abstract class GameObject {
     val type = this::class.simpleName!!
-    var name: String = "GameObject"
+    abstract var name: String
         protected set
-    var description: String = "No description available"
+    abstract var description: String
         protected set
-    protected var icon: String = ""
-    protected var components: List<GameBehaviour> = listOf()
+    protected abstract var icon: String
+    protected abstract var components: MutableList<GameBehaviour>
 
-    private val objectGUI : PaginatedGui = Gui.paginated()
-        .title(Component.text("$type Menu"))
-        .rows(6)
-        .create()
+    inner class ObjectGUI : SolarisGUI("$type Object") {
+        override fun onOpen(player: Player) {
+            gui.clearPageItems()
+            components.forEach { component ->
+                gui.addItem(
+                    ItemBuilder.from(component.icon)
+                        .name("${component.name} [Behaviour]".asComponent())
+                        .lore(component.description.asComponent())
+                        .asGuiItem() { component.PropertiesGUI().openWithDelegate(player, this) }
+                )
+            }
+        }
+    }
 
     fun placeObject(event: BlockPlaceEvent) {
-        event.player.msg("You placed a GameObject")
+        event.player.msg("You placed a engine.GameObject")
         val blockNBT = NBTBlock(event.block)
         val itemNBT = NBTItem(event.itemInHand)
         blockNBT.data.setObject(Constants.NBT.SOLARIS_KEY, itemNBT.getObject(Constants.NBT.SOLARIS_KEY, NBTData::class.java))
@@ -46,19 +56,7 @@ open class GameObject {
     }
 
     fun editObject(event: PlayerInteractEvent) {
-        objectGUI.clearPageItems()
-        this.javaClass.declaredFields.forEach { field ->
-            if (field.isAnnotationPresent(GameProperty::class.java)) {
-                field.isAccessible = true
-                objectGUI.addItem(
-                    ItemBuilder.from(Material.STONE)
-                        .name(field.name.asComponent())
-                        .lore(field.get(this).toString().asComponent())
-                        .asGuiItem()
-                )
-            }
-        }
-        objectGUI.open(event.player)
+        ObjectGUI().open(event.player)
     }
 
     inner class NBTData(

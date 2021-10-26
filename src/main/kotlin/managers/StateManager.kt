@@ -1,11 +1,9 @@
 package managers
 
-enum class STATES {
-    FINAL,
-    INGAME,
-    SUDDENDEATH
-}
-
 object StateManager {
-
+    enum class STATES {
+        FINAL,
+        INGAME,
+        SUDDENDEATH
+    }
 }

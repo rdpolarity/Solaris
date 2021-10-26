@@ -1,9 +1,8 @@
 package managers
 
-import Extensions.asComponent
-import Extensions.broadcast
-import Extensions.isGameObject
-import GameObject
+import extentions.asComponent
+import extentions.isGameObject
+import engine.GameObject
 import Solaris
 import co.aikar.commands.BaseCommand
 import co.aikar.commands.annotation.CommandAlias
@@ -16,7 +15,6 @@ import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.guis.Gui
 import dev.triumphteam.gui.guis.PaginatedGui
 import hazae41.minecraft.kutils.bukkit.listen
-import hazae41.minecraft.kutils.bukkit.msg
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -24,6 +22,7 @@ import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.plugin.java.annotation.command.Command
 
 
@@ -63,7 +62,7 @@ object MapManager {
     }
 
     private fun editPrefab(event: PlayerInteractEvent) {
-        if (event.action == Action.RIGHT_CLICK_BLOCK) {
+        if (event.action == Action.RIGHT_CLICK_BLOCK && event.hand == EquipmentSlot.HAND) {
             val block = event.clickedBlock
             if (block?.type != Material.PLAYER_HEAD) return
             if (!block.isGameObject()) return
