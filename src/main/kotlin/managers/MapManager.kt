@@ -43,7 +43,9 @@ object MapManager {
         override fun onOpen(player: Player) {
             gui.clearPageItems()
             activeObjects.forEach { obj ->
-                gui.addItem(obj.asItemWithLink(this))
+                if (obj.location?.world == player.world) {
+                    gui.addItem(obj.asItemWithLink(this))
+                }
             }
         }
     }
@@ -145,7 +147,7 @@ object MapManager {
         @Subcommand("prefabs")
         fun onPrefabs(player: Player) { PrefabGUI().open(player) }
 
-        @Subcommand("object")
+        @Subcommand("objects")
         fun onObjects(player: Player) { ObjectsGUI().open(player) }
 
         @Subcommand("data")

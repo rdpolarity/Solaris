@@ -45,8 +45,7 @@ abstract class GameObject {
                     location?.let {
                         val block = it.block
                         block.type = Material.AIR
-                        GlobalDataManager.removeLocation(it)
-                        MapManager.activeObjects.remove(this@GameObject)
+                        destroyObject()
                         back(player)
                     }
                 }
@@ -62,12 +61,24 @@ abstract class GameObject {
         }
     }
 
+    fun destroyObject() {
+        location?.let {
+            stopGizmos()
+            GlobalDataManager.removeLocation(it)
+            MapManager.activeObjects.remove(this)
+        }
+    }
+
     fun instantiate(gameObject : GameObject, location: Location) : GameObject {
         val instantiatedObject = gameObject::class.createInstance()
+        if (MapManager.activeObjects.all { it.name.dropLast(2) == instantiatedObject.name }) {
+            val amount = MapManager.activeObjects.count { it.type == instantiatedObject.type }
+            instantiatedObject.name = instantiatedObject.name + " " + amount.toString()
+        }
         MapManager.activeObjects.add(instantiatedObject)
         GlobalDataManager.addLocation(location)
         instantiatedObject.location = location
-        instantiatedObject.runGizmos(location)
+        instantiatedObject.runGizmos()
         return instantiatedObject
     }
 
@@ -96,9 +107,14 @@ abstract class GameObject {
         val overrides: String = "null"
     )
 
-    fun runGizmos(location: Location) {
-        components.forEach { it.onGizmo(location) }
+    fun runGizmos() {
+        components.forEach { it.onGizmo(location ?: return) }
     }
+
+    fun stopGizmos() {
+        components.forEach { it.onGizmo(location ?: return)  }
+    }
+
 
     fun asItem(): GuiItem {
         val skull = ItemBuilder.skull().texture(icon)
