@@ -19,9 +19,9 @@ abstract class GameBehaviour() {
     open fun onGizmo(location: Location) {
     }
 
-    private fun getGameObject(location: Location): GameObject? {
-        return MapManager.getObjectAt(location)
-    }
+//    private fun getGameObject(location: Location): GameObject? {
+//        return MapManager.getObjectAt(location)
+//    }
 
     inner class PropertiesGUI : SolarisGUI("$name Properties" ) {
         override fun onOpen(player: Player) {

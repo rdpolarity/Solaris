@@ -2,6 +2,7 @@ package engine.behaviours
 
 import annotations.GameProperty
 import de.slikey.effectlib.effect.CubeEffect
+import de.slikey.effectlib.util.MathUtils
 import engine.GameBehaviour
 import extentions.broadcast
 import managers.GizmoManager
@@ -19,10 +20,11 @@ class SpawnChestWithLoot : GameBehaviour() {
     val chestType : String = "legendary"
 
     override fun onGizmo(location: Location) {
-        location.apply { y += .5; x += .5; z += .5 } // Center Upper Align
-        var fx = CubeEffect(GizmoManager.effectManager)
+        val gizmoLoc = location.clone().apply { y += .5; x += .5; z += .5 } // Center Upper Align
+        val fx = CubeEffect(GizmoManager.effectManager)
+        fx.iterations = -1
         fx.enableRotation = false
-        fx.location = location
+        fx.location = gizmoLoc
         GizmoManager.effectManager.start(fx)
     }
 

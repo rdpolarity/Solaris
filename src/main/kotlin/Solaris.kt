@@ -41,8 +41,8 @@ class Solaris : BukkitPlugin() {
     override fun onEnable() {
         info("Engine Enabled!")
 
-        MapManager.registerEvents(this)
         MapManager.addPrefab(LootChest(),SpeedBoost())
+        MapManager.onEnable(this)
 
         val commandManager = BukkitCommandManager(this).apply {
             registerCommand(Commands())

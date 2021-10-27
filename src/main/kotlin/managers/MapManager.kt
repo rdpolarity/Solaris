@@ -1,7 +1,6 @@
 package managers
 
 import GUI.SolarisGUI
-import extentions.asComponent
 import extentions.isGameObject
 import engine.GameObject
 import Solaris
@@ -10,15 +9,12 @@ import co.aikar.commands.annotation.CommandAlias
 import co.aikar.commands.annotation.Default
 import co.aikar.commands.annotation.Subcommand
 import data.Constants
-import de.slikey.effectlib.util.MathUtils
 import de.tr7zw.nbtapi.NBTBlock
 import de.tr7zw.nbtapi.NBTItem
-import dev.triumphteam.gui.builder.item.ItemBuilder
-import dev.triumphteam.gui.guis.Gui
-import dev.triumphteam.gui.guis.PaginatedGui
 import extentions.broadcast
+import extentions.debugLog
 import hazae41.minecraft.kutils.bukkit.listen
-import net.kyori.adventure.text.Component
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -28,15 +24,15 @@ import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.plugin.java.annotation.command.Command
-import org.bukkit.util.Vector
 
 
 object MapManager {
-
     private val prefabs : MutableList<GameObject> = mutableListOf()
+    val activeObjects : MutableList<GameObject> = mutableListOf()
 
     class PrefabGUI : SolarisGUI("Prefab Selector") {
         override fun onOpen(player: Player) {
+            gui.clearPageItems()
             prefabs.forEach {
                 gui.addItem(it.asItem())
             }
@@ -45,10 +41,27 @@ object MapManager {
 
     class ObjectsGUI : SolarisGUI("Active Objects") {
         override fun onOpen(player: Player) {
-            GlobalDataManager.getData(player).locations.forEach { loc ->
-                val fulLoc = Location(player.world, loc.x, loc.y, loc.z)
-                getObjectAt(fulLoc)?.let {
-                    gui.addItem(it.asItemWithLink(fulLoc, this))
+            gui.clearPageItems()
+            activeObjects.forEach { obj ->
+                gui.addItem(obj.asItemWithLink(this))
+            }
+        }
+    }
+
+    /**
+     * Finds all objects for each world and stores them in active objects
+     */
+    private fun initActiveObjects() {
+        Bukkit.getWorlds().forEach { world ->
+            "searching ${world.name}:".broadcast()
+            GlobalDataManager.getData(world).locations.forEach { loc ->
+                "searching ${loc}".debugLog()
+                val obj = getPrefabObjectAt(loc.toLocation(world))
+                "result: ${loc.toLocation(world).block.type}".debugLog()
+                obj?.let {
+                    "found ${it.name}".debugLog()
+                    "creating object at ${loc.toLocation(world)}".debugLog()
+                    it.instantiate(it, loc.toLocation(world))
                 }
             }
         }
@@ -60,28 +73,41 @@ object MapManager {
         prefabs.findLast { it.type == solarisData.type }?.placeObject(event)
     }
 
-    fun getObjects(player: Player) : List<GameObject> {
-        val objects : MutableList<GameObject> = mutableListOf()
-        GlobalDataManager.getData(player).locations.forEach { loc ->
-            val fulLoc = Location(player.world, loc.x, loc.y, loc.z)
-            getObjectAt(fulLoc)?.let { objects.add(it) }
-        }
-        return objects
-    }
+//    fun getObjects(player: Player) : List<GameObject> {
+//        val objects : MutableList<GameObject> = mutableListOf()
+//        GlobalDataManager.getData(player.world).locations.forEach { loc ->
+//            val fulLoc = Location(player.world, loc.x, loc.y, loc.z)
+//            getObjectAt(fulLoc)?.let { objects.add(it) }
+//        }
+//        return objects
+//    }
 
-    fun getObjectAt(location: Location): GameObject? {
+    /**
+     * Finds the prefab type used at a location
+     */
+    private fun getPrefabObjectAt(location: Location): GameObject? {
         val block = location.block
-        if (block.type != Material.PLAYER_HEAD) return null
+        if (block.type !in listOf(Material.PLAYER_HEAD, Material.PLAYER_WALL_HEAD)) return null
         if (!block.isGameObject()) return null
         val itemNBT = NBTBlock(block)
         val solarisData = itemNBT.data.getObject(Constants.NBT.SOLARIS_KEY, GameObject.NBTData::class.java)
-        return prefabs.findLast { it.type == solarisData.type }
+        return prefabs.find { it.type == solarisData.type }
     }
 
-    private fun editPrefab(event: PlayerInteractEvent) {
+    /**
+     * Finds active objects at a location
+     */
+    private fun getActiveObjectAt(location: Location): GameObject? {
+        return activeObjects.find { it.location == location }
+    }
+
+    /**
+     * Edits an active object using player interaction event details
+     */
+    private fun editObject(event: PlayerInteractEvent) {
         if (event.action == Action.RIGHT_CLICK_BLOCK && event.hand == EquipmentSlot.HAND) {
             event.clickedBlock?.let {
-                getObjectAt(it.location)?.editObject(event)
+                getActiveObjectAt(it.location)?.editObject(event)
             }
         }
     }
@@ -92,9 +118,14 @@ object MapManager {
         }
     }
 
-    fun registerEvents(solaris: Solaris) {
+    fun onEnable(solaris: Solaris) {
+        initActiveObjects()
+        registerEvents(solaris)
+    }
+
+    private fun registerEvents(solaris: Solaris) {
         solaris.listen<BlockBreakEvent> { if (it.block.isGameObject()) it.isCancelled = true }
-        solaris.listen<PlayerInteractEvent> { editPrefab(it) }
+        solaris.listen<PlayerInteractEvent> { editObject(it) }
         solaris.listen<BlockPlaceEvent> { if (it.itemInHand.isGameObject()) placePrefab(it) }
     }
 
@@ -119,18 +150,18 @@ object MapManager {
 
         @Subcommand("data")
         fun onData(player: Player) {
-            GlobalDataManager.getData(player).toString().broadcast()
+            GlobalDataManager.getData(player.world).toString().broadcast()
         }
 
         @Subcommand("dataAdd")
         fun onDataAdd(player: Player) {
-            GlobalDataManager.addLocation(player, Vector(1,1,1))
+            GlobalDataManager.addLocation(player.location)
 //            GlobalDataManager.addLocation(player, Vector(MathUtils.random(0,10),MathUtils.random(0,10),MathUtils.random(0,10)))
         }
 
         @Subcommand("dataClear")
         fun onDataClear(player: Player) {
-            GlobalDataManager.resetData(player)
+            GlobalDataManager.resetData(player.world)
         }
     }
 }

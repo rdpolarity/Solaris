@@ -63,7 +63,7 @@ open class SolarisGUI(val title: String = "") {
     }
 
     fun back(player: Player) {
-        delegate?.open(player)
+        if (delegate != null) delegate?.open(player) else gui.close(player)
     }
 
     open fun onOpen(player: Player) {
