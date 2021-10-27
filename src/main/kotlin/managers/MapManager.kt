@@ -46,8 +46,9 @@ object MapManager {
     class ObjectsGUI : SolarisGUI("Active Objects") {
         override fun onOpen(player: Player) {
             GlobalDataManager.getData(player).locations.forEach { loc ->
-                getObjectAt(Location(player.world, loc.x, loc.y, loc.z))?.let {
-                    gui.addItem(it.asItem())
+                val fulLoc = Location(player.world, loc.x, loc.y, loc.z)
+                getObjectAt(fulLoc)?.let {
+                    gui.addItem(it.asItemWithLink(fulLoc, this))
                 }
             }
         }
@@ -59,7 +60,16 @@ object MapManager {
         prefabs.findLast { it.type == solarisData.type }?.placeObject(event)
     }
 
-    private fun getObjectAt(location: Location): GameObject? {
+    fun getObjects(player: Player) : List<GameObject> {
+        val objects : MutableList<GameObject> = mutableListOf()
+        GlobalDataManager.getData(player).locations.forEach { loc ->
+            val fulLoc = Location(player.world, loc.x, loc.y, loc.z)
+            getObjectAt(fulLoc)?.let { objects.add(it) }
+        }
+        return objects
+    }
+
+    fun getObjectAt(location: Location): GameObject? {
         val block = location.block
         if (block.type != Material.PLAYER_HEAD) return null
         if (!block.isGameObject()) return null

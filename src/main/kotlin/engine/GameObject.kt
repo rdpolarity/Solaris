@@ -59,6 +59,7 @@ abstract class GameObject {
         blockNBT.data.setObject(Constants.NBT.SOLARIS_KEY, itemNBT.getObject(Constants.NBT.SOLARIS_KEY, NBTData::class.java))
         event.player.msg("Data: ${blockNBT.data}")
         GlobalDataManager.addLocation(event.player, event.block.location.toVector())
+        runGizmos(event.block.location)
     }
 
     fun displayHologram(location: Location) {
@@ -77,6 +78,10 @@ abstract class GameObject {
         val overrides: String = "null"
     )
 
+    fun runGizmos(location: Location) {
+        components.forEach { it.onGizmo(location) }
+    }
+
     fun asItem(): GuiItem {
         val skull = ItemBuilder.skull().texture(icon)
             ?: ItemBuilder.from(Material.STONE)
@@ -90,6 +95,22 @@ abstract class GameObject {
                 it.isCancelled = true
                 if (it.click != ClickType.LEFT) return@asGuiItem;
                 it.cursor = it.currentItem
+            }
+    }
+
+    fun asItemWithLink(location: Location, solarisGUI: SolarisGUI): GuiItem {
+        val skull = ItemBuilder.skull().texture(icon)
+            ?: ItemBuilder.from(Material.STONE)
+        val skullNBT = NBTItem(skull.build())
+        skullNBT.setObject(Constants.NBT.SOLARIS_KEY, NBTData())
+        return ItemBuilder
+            .from(skullNBT.item)
+            .name(name.asComponent())
+            .lore(description.asComponent())
+            .asGuiItem {
+                it.isCancelled = true
+                if (it.click != ClickType.LEFT) return@asGuiItem;
+                this@GameObject.ObjectGUI(location).openWithDelegate(it.whoClicked as Player, solarisGUI)
             }
     }
 }

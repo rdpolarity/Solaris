@@ -4,17 +4,23 @@ import extentions.asComponent
 import GUI.SolarisGUI
 import annotations.GameProperty
 import dev.triumphteam.gui.builder.item.ItemBuilder
+import managers.GizmoManager
+import managers.MapManager
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
-abstract class GameBehaviour {
+abstract class GameBehaviour() {
     val type = this::class.simpleName!!
     abstract var name: String
     abstract var description: String
     abstract var icon: Material
 
-    open fun onGizmo() {
+    open fun onGizmo(location: Location) {
+    }
 
+    private fun getGameObject(location: Location): GameObject? {
+        return MapManager.getObjectAt(location)
     }
 
     inner class PropertiesGUI : SolarisGUI("$name Properties" ) {
