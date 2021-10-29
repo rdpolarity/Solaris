@@ -10,7 +10,7 @@ class LootChest : GameObject() {
     override var name = "LootChest (With a surprise)"
     override var description = "A chest with random loot inside... maybe"
     override var icon = Constants.Skulls.CHEST
-    override var components: MutableList<GameBehaviour> = mutableListOf(
+    override var behaviours: MutableList<GameBehaviour> = mutableListOf(
         SpawnChestWithLoot(),
         ChanceToExplodeOnClick()
     )

@@ -8,6 +8,7 @@ import extentions.broadcast
 import managers.GizmoManager
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.Particle
 
 class SpawnChestWithLoot : GameBehaviour() {
     override var name = "ChestSpawner"
@@ -20,18 +21,16 @@ class SpawnChestWithLoot : GameBehaviour() {
     val chestType : String = "legendary"
 
     override fun onGizmo(location: Location) {
-        val gizmoLoc = location.clone().apply { y += .5; x += .5; z += .5 } // Center Upper Align
-        val fx = CubeEffect(GizmoManager.effectManager)
-        fx.iterations = -1
-        fx.enableRotation = false
-        fx.location = gizmoLoc
-        GizmoManager.effectManager.start(fx)
+        gizmo.cuboid(location)
+        gizmo.helix(location, particle = Particle.FLAME)
+        gizmo.title(location, "Testing gizmo name")
     }
 
     override fun onStart() {
         // on start logic
     }
 
+    // override fun onStateChange()
     // override fun onUpdate()
     // override fun onInteraction()
 }

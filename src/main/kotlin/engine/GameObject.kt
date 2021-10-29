@@ -9,9 +9,7 @@ import de.tr7zw.nbtapi.NBTBlock
 import de.tr7zw.nbtapi.NBTItem
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.guis.GuiItem
-import engine.behaviours.SpawnChestWithLoot
 import extentions.debugLog
-import hazae41.minecraft.kutils.bukkit.Config
 import hazae41.minecraft.kutils.bukkit.msg
 import managers.GlobalDataManager
 import managers.MapManager
@@ -31,8 +29,9 @@ abstract class GameObject {
     abstract var description: String
         protected set
     protected abstract var icon: String
-    protected abstract var components: MutableList<GameBehaviour>
+    protected abstract var behaviours: MutableList<GameBehaviour>
     var location : Location? = null
+    var activeBehaviours : MutableList<GameBehaviour> = mutableListOf()
 
     inner class ObjectGUI() : SolarisGUI("$type Object") {
         override fun onOpen(player: Player) {
@@ -50,7 +49,7 @@ abstract class GameObject {
                     }
                 }
             gui.setItem(7, 0, removeItem)
-            components.forEach { component ->
+            behaviours.forEach { component ->
                 gui.addItem(
                     ItemBuilder.from(component.icon)
                         .name("${component.name} [Behaviour]".asComponent())
@@ -75,6 +74,10 @@ abstract class GameObject {
             val amount = MapManager.activeObjects.count { it.type == instantiatedObject.type }
             instantiatedObject.name = instantiatedObject.name + " " + amount.toString()
         }
+        behaviours.forEach {
+            val instantiatedBehaviour = it::class.createInstance()
+            instantiatedObject.activeBehaviours.add(instantiatedBehaviour)
+        }
         MapManager.activeObjects.add(instantiatedObject)
         GlobalDataManager.addLocation(location)
         instantiatedObject.location = location
@@ -91,12 +94,6 @@ abstract class GameObject {
         event.player.msg("Data: ${blockNBT.data}")
     }
 
-    fun displayHologram(location: Location) {
-        location.apply { y++; x += .5; z += .5 } // Center Upper Align
-        val hologram = HologramsAPI.createHologram(Solaris.getPlugin(), location)
-        hologram.appendTextLine("$name [$type]")
-    }
-
     fun editObject(event: PlayerInteractEvent) {
         ObjectGUI().open(event.player)
     }
@@ -108,11 +105,11 @@ abstract class GameObject {
     )
 
     fun runGizmos() {
-        components.forEach { it.onGizmo(location ?: return) }
+        activeBehaviours.forEach { it.onGizmo(location ?: return) }
     }
 
     fun stopGizmos() {
-        components.forEach { it.onGizmo(location ?: return)  }
+        activeBehaviours.forEach { it.onStopGizmo()  }
     }
 
 

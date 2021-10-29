@@ -25,6 +25,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.plugin.java.annotation.command.Command
+import org.bukkit.plugin.java.annotation.dependency.SoftDependency
 import org.bukkit.plugin.java.annotation.plugin.ApiVersion
 import org.bukkit.plugin.java.annotation.plugin.Description
 import org.bukkit.plugin.java.annotation.plugin.Plugin
@@ -33,6 +34,7 @@ import java.awt.TextComponent
 
 @Plugin(name="Solaris", version = "1.0")
 @ApiVersion(ApiVersion.Target.v1_16)
+@SoftDependency("HolographicDisplays")
 @Description("Decoupled minigame engine")
 @Author("RDPolarity")
 class Solaris : BukkitPlugin() {
