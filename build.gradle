@@ -2,7 +2,8 @@ plugins {
     id "org.jetbrains.kotlin.kapt" version "1.5.31"
     id 'org.jetbrains.kotlin.jvm' version '1.5.31'
     id 'com.github.johnrengelman.shadow' version '6.0.0'
-    id 'kr.entree.spigradle' version '1.2.4'
+    id 'kr.entree.spigradle' version '2.4.2'
+    id 'org.jetbrains.dokka' version '1.7.10'
 }
 
 // Variables
@@ -11,7 +12,6 @@ def buildLocation = "C:\\Users\\rdpol\\Documents\\GitHub\\Servers\\server 1.16.5
 // Properties
 group = 'me.rdpolarity.solaris'
 version = '1.0'
-spigotPluginYaml.enabled(false)
 
 repositories {
     mavenCentral()
@@ -27,14 +27,16 @@ repositories {
 
 dependencies {
     implementation spigot("1.16.5")
+    implementation 'com.github.RomanPozdeev:MobX:0.1'
+    implementation 'io.github.classgraph:classgraph:4.8.149'
     implementation "co.aikar:acf-bukkit:0.5.0-SNAPSHOT"
     implementation "com.github.hazae41:mc-kutils:master-SNAPSHOT"
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.5.31"
-    implementation "dev.triumphteam:triumph-gui:3.0.4"
+    implementation 'dev.triumphteam:triumph-gui:3.1.2'
     implementation "com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.0"
     implementation "org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT"
     implementation "de.tr7zw:item-nbt-api-plugin:2.8.0"
-    implementation 'com.elmakers.mine.bukkit:EffectLib:9.3'
+    implementation 'com.elmakers.mine.bukkit:EffectLib:9.4'
 
     kapt "org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT"
 }

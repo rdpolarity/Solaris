@@ -25,10 +25,6 @@ abstract class GameBehaviour() {
     abstract var icon: Material
     protected val gizmo : Gizmo = Gizmo()
 
-    open fun onStateChange() {
-
-    }
-
     inner class PropertiesGUI : SolarisGUI("$name Properties" ) {
         override fun onOpen(player: Player) {
             gui.clearPageItems()

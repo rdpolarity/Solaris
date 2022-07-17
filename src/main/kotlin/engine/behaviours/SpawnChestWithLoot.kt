@@ -22,8 +22,7 @@ class SpawnChestWithLoot : GameBehaviour() {
 
     override fun onGizmo(location: Location) {
         gizmo.cuboid(location)
-        gizmo.helix(location, particle = Particle.FLAME)
-        gizmo.title(location, "Testing gizmo name")
+        gizmo.title(location, "Testing gizmo name ${rarityLevel}")
     }
 
     override fun onStart() {

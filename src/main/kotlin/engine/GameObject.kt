@@ -9,10 +9,14 @@ import de.tr7zw.nbtapi.NBTBlock
 import de.tr7zw.nbtapi.NBTItem
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.guis.GuiItem
+import extentions.broadcast
 import extentions.debugLog
 import hazae41.minecraft.kutils.bukkit.msg
+import hazae41.minecraft.kutils.textOf
 import managers.GlobalDataManager
 import managers.MapManager
+import managers.StateManager
+import mobx.core.autorun
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Location
 import org.bukkit.Material
@@ -22,16 +26,26 @@ import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.player.PlayerInteractEvent
 import kotlin.reflect.full.createInstance
 
-abstract class GameObject {
+abstract class GameObject(var name: String) {
     val type = this::class.simpleName!!
-    abstract var name: String
-        protected set
     abstract var description: String
         protected set
     protected abstract var icon: String
     protected abstract var behaviours: MutableList<GameBehaviour>
     var location : Location? = null
     var activeBehaviours : MutableList<GameBehaviour> = mutableListOf()
+
+    init {
+        "&8[${name}] &fhas been instantiated".broadcast()
+        autorun {
+            when(StateManager.state) {
+                StateManager.STATE.PLAY -> "&8[${name}] &a▶ is now in play mode".broadcast()
+                StateManager.STATE.EDIT -> "&8[${name}] &6⏸ is now in edit mode".broadcast()
+                StateManager.STATE.DEBUG -> "&8[${name}} &4⏹ is now in debug mode".broadcast()
+                else -> "${name} is now in unknown mode".broadcast()
+            }
+        }
+    }
 
     inner class ObjectGUI() : SolarisGUI("$type Object") {
         override fun onOpen(player: Player) {
@@ -112,7 +126,9 @@ abstract class GameObject {
         activeBehaviours.forEach { it.onStopGizmo()  }
     }
 
-
+    /**
+     * Gets this game objects as an object that can be duplicated and placed
+     */
     fun asItem(): GuiItem {
         val skull = ItemBuilder.skull().texture(icon)
             ?: ItemBuilder.from(Material.STONE)
@@ -129,6 +145,9 @@ abstract class GameObject {
             }
     }
 
+    /**
+     * Gets game objects with the intent to be linked to an existing instance or prefab
+     */
     fun asItemWithLink(solarisGUI: SolarisGUI): GuiItem {
         val skull = ItemBuilder.skull().texture(icon)
             ?: ItemBuilder.from(Material.STONE)

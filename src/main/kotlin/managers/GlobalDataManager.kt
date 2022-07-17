@@ -14,24 +14,33 @@ import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 
 /**
- * Stateless manager to track of the locations of each object on a
+ * Stateless manager to keep track of the locations for each object on a
  * Map using NBT data of a block at 0,0,0
  */
 object GlobalDataManager {
     /**
-     * This manages data sent to the global data block
+     * Manages data sent to the global data block
      */
     data class GlobalData(val locations: MutableList<Vector>)
 
+    /**
+     * Retrieves NBT block data at 0,0,0 in specified world
+     */
     private fun getBlockNBT(world: World) : NBTCompound? {
         val block = world.getBlockAt(0,0,0)
         return NBTBlock(block).data
     }
 
+    /**
+     * Saves global data object to the worlds 0,0,0
+     */
     private fun saveData(world: World, globalData: GlobalData) {
         getBlockNBT(world)?.setObject(Constants.NBT.SOLARIS_GLOBAL_KEY, globalData)
     }
 
+    /**
+     * Clears all data stored at 0,0,0 in a set world
+     */
     fun resetData(world: World) {
         getBlockNBT(world)?.setObject(Constants.NBT.SOLARIS_GLOBAL_KEY, GlobalData(mutableListOf()))
     }

@@ -11,6 +11,7 @@ import co.aikar.commands.annotation.Subcommand
 import data.Constants
 import de.tr7zw.nbtapi.NBTBlock
 import de.tr7zw.nbtapi.NBTItem
+import engine.objects.LootChest
 import extentions.broadcast
 import extentions.debugLog
 import hazae41.minecraft.kutils.bukkit.listen
@@ -24,12 +25,18 @@ import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.plugin.java.annotation.command.Command
+import kotlin.reflect.KClass
 
-
+/**
+ * The Map Manager handles keeping track of all objects in various worlds
+ */
 object MapManager {
     private val prefabs : MutableList<GameObject> = mutableListOf()
     val activeObjects : MutableList<GameObject> = mutableListOf()
 
+    /**
+     * Displays all the prefabs added to the prefabs list
+     */
     class PrefabGUI : SolarisGUI("Prefab Selector") {
         override fun onOpen(player: Player) {
             gui.clearPageItems()
@@ -39,6 +46,9 @@ object MapManager {
         }
     }
 
+    /**
+     * Displays all active objects in the current world
+     */
     class ObjectsGUI : SolarisGUI("Active Objects") {
         override fun onOpen(player: Player) {
             gui.clearPageItems()
@@ -114,7 +124,17 @@ object MapManager {
         }
     }
 
-    fun addPrefab(vararg objects : GameObject) {
+    /**
+     * Add any amount of GameObjects to the prefabs list
+     * Which can be accessed in-game with `/map prefabs`
+     */
+    fun addPrefab(vararg objects: GameObject) {
+        objects.forEach {
+            prefabs.add(it)
+        }
+    }
+
+    fun addPrefab(objects: List<GameObject>) {
         objects.forEach {
             prefabs.add(it)
         }
@@ -126,8 +146,11 @@ object MapManager {
     }
 
     private fun registerEvents(solaris: Solaris) {
+        // Prevents game object heads from being broken, instead they can be destroyed through GUI
         solaris.listen<BlockBreakEvent> { if (it.block.isGameObject()) it.isCancelled = true }
+        // Brings up the edit GUI on right click
         solaris.listen<PlayerInteractEvent> { editObject(it) }
+        // Calls the necessary function when placing a blocks that's a game object
         solaris.listen<BlockPlaceEvent> { if (it.itemInHand.isGameObject()) placePrefab(it) }
     }
 
