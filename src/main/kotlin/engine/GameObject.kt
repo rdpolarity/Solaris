@@ -1,31 +1,37 @@
 package engine
 
-import extentions.asComponent
 import GUI.SolarisGUI
-import Solaris
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI
 import data.Constants
 import de.tr7zw.nbtapi.NBTBlock
 import de.tr7zw.nbtapi.NBTItem
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.guis.GuiItem
+import extentions.asComponent
 import extentions.broadcast
 import extentions.debugLog
 import hazae41.minecraft.kutils.bukkit.msg
-import hazae41.minecraft.kutils.textOf
 import managers.GlobalDataManager
 import managers.MapManager
 import managers.StateManager
 import mobx.core.autorun
 import net.kyori.adventure.text.format.TextColor
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.block.Skull
 import org.bukkit.entity.Player
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.player.PlayerInteractEvent
+import java.util.*
 import kotlin.reflect.full.createInstance
 
+/**
+ * Core GameObject which handles:
+ * - Creating prefab items for GUI
+ * - Removing skulls when in play mode
+ * @param name Name of the gameobject, additional objects will append a number
+ */
 abstract class GameObject(var name: String) {
     val type = this::class.simpleName!!
     abstract var description: String
@@ -35,15 +41,36 @@ abstract class GameObject(var name: String) {
     var location : Location? = null
     var activeBehaviours : MutableList<GameBehaviour> = mutableListOf()
 
-    init {
-        "&8[${name}] &fhas been instantiated".broadcast()
-        autorun {
-            when(StateManager.state) {
-                StateManager.STATE.PLAY -> "&8[${name}] &a▶ is now in play mode".broadcast()
-                StateManager.STATE.EDIT -> "&8[${name}] &6⏸ is now in edit mode".broadcast()
-                StateManager.STATE.DEBUG -> "&8[${name}} &4⏹ is now in debug mode".broadcast()
-                else -> "${name} is now in unknown mode".broadcast()
-            }
+    private fun onPlay() {
+        "&8[${name}] &a▶ is now in play mode".broadcast()
+        stopGizmos()
+        removeHead()
+    }
+
+    private fun onEdit() {
+        "&8[${name}] &6⏸ is now in edit mode".broadcast()
+        runGizmos()
+        addHead()
+    }
+
+    private fun onDebug() {
+        "&8[${name}} &4⏹ is now in debug mode".broadcast()
+        runGizmos()
+        removeHead()
+    }
+
+    private fun removeHead() {
+        location?.let {
+            it.block.type = Material.AIR
+        }
+    }
+
+    private fun addHead() {
+        location?.let {
+            val block = it.block
+            block.type = Material.PLAYER_HEAD
+//            val state = block.state as Skull
+//            state.setOwningPlayer(Bukkit.getServer().getOfflinePlayer(UUID.fromString(icon)))
         }
     }
 
@@ -82,6 +109,18 @@ abstract class GameObject(var name: String) {
         }
     }
 
+    protected fun init() {
+        "&8[${name}] &fhas been instantiated".broadcast()
+        autorun {
+            when(StateManager.state) {
+                StateManager.STATE.PLAY -> onPlay()
+                StateManager.STATE.EDIT -> onEdit()
+                StateManager.STATE.DEBUG -> onDebug()
+                else -> "${name} is now in unknown mode".broadcast()
+            }
+        }
+    }
+
     fun instantiate(gameObject : GameObject, location: Location) : GameObject {
         val instantiatedObject = gameObject::class.createInstance()
         if (MapManager.activeObjects.all { it.name.dropLast(2) == instantiatedObject.name }) {
@@ -95,7 +134,7 @@ abstract class GameObject(var name: String) {
         MapManager.activeObjects.add(instantiatedObject)
         GlobalDataManager.addLocation(location)
         instantiatedObject.location = location
-        instantiatedObject.runGizmos()
+        instantiatedObject.init()
         return instantiatedObject
     }
 
@@ -119,6 +158,7 @@ abstract class GameObject(var name: String) {
     )
 
     fun runGizmos() {
+        "running gizmo at ${location}".broadcast()
         activeBehaviours.forEach { it.onGizmo(location ?: return) }
     }
 

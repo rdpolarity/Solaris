@@ -99,7 +99,6 @@ object MapManager {
      */
     private fun getPrefabObjectAt(location: Location): GameObject? {
         val block = location.block
-        if (block.type !in listOf(Material.PLAYER_HEAD, Material.PLAYER_WALL_HEAD)) return null
         if (!block.isGameObject()) return null
         val itemNBT = NBTBlock(block)
         val solarisData = itemNBT.data.getObject(Constants.NBT.SOLARIS_KEY, GameObject.NBTData::class.java)
@@ -151,7 +150,10 @@ object MapManager {
         // Brings up the edit GUI on right click
         solaris.listen<PlayerInteractEvent> { editObject(it) }
         // Calls the necessary function when placing a blocks that's a game object
-        solaris.listen<BlockPlaceEvent> { if (it.itemInHand.isGameObject()) placePrefab(it) }
+        solaris.listen<BlockPlaceEvent> { if (it.itemInHand.isGameObject()) {
+            it.isCancelled = true
+            placePrefab(it)
+        }}
     }
 
     @CommandAlias("map")

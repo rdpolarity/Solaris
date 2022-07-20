@@ -46,8 +46,6 @@ class Solaris : BukkitPlugin() {
 
     override fun onEnable() {
         info("Engine Enabled!")
-
-//        MapManager.addPrefab(LootChest::class, SpeedBoost::class)
         val prefabs = getAllAnnotatedWith(GamePrefab::class).map { it.createInstance() as GameObject }
         MapManager.addPrefab(prefabs)
         MapManager.onEnable(this)
@@ -61,7 +59,7 @@ class Solaris : BukkitPlugin() {
         // Debug Stick Logic
         listen<PlayerInteractEvent> {
             if (it.hand != EquipmentSlot.HAND) return@listen
-            if (it.player.inventory.itemInMainHand.type != Material.DEBUG_STICK) return@listen
+            if (it.player.inventory.itemInMainHand.type != Material.STICK) return@listen
             val nbtData = NBTBlock(it.clickedBlock).data.toString()
             it.player.msg(nbtData)
         }
@@ -103,7 +101,7 @@ class Solaris : BukkitPlugin() {
         @Default
         @Subcommand("debug")
         private fun onTest(player : Player) {
-            val debugStick = ItemBuilder.from(Material.DEBUG_STICK).asGuiItem().itemStack
+            val debugStick = ItemBuilder.from(Material.STICK).asGuiItem().itemStack
             player.inventory.addItem(debugStick)
         }
     }
