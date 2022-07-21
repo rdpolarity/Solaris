@@ -89,6 +89,7 @@ class Solaris : BukkitPlugin() {
 
         @Default
         private fun onSolaris(player : Player) {
+            player.msg("Solaris is cool!!!!")
         }
 
         @Default
