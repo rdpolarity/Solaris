@@ -1,29 +1,26 @@
-package engine
+package me.rdpolarity.solaris.engine
 
-import GUI.SolarisGUI
-import data.Constants
+import me.rdpolarity.solaris.GUI.SolarisGUI
+import me.rdpolarity.solaris.data.Constants
 import de.tr7zw.nbtapi.NBTBlock
 import de.tr7zw.nbtapi.NBTItem
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.guis.GuiItem
-import extentions.asComponent
-import extentions.broadcast
-import extentions.debugLog
+import me.rdpolarity.solaris.extentions.asComponent
+import me.rdpolarity.solaris.extentions.broadcast
+import me.rdpolarity.solaris.extentions.debugLog
 import hazae41.minecraft.kutils.bukkit.msg
-import managers.GlobalDataManager
-import managers.MapManager
-import managers.StateManager
+import me.rdpolarity.solaris.managers.GlobalDataManager
+import me.rdpolarity.solaris.managers.MapManager
+import me.rdpolarity.solaris.managers.StateManager
 import mobx.core.autorun
 import net.kyori.adventure.text.format.TextColor
-import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
-import org.bukkit.block.Skull
 import org.bukkit.entity.Player
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.player.PlayerInteractEvent
-import java.util.*
 import kotlin.reflect.full.createInstance
 
 /**
@@ -140,7 +137,7 @@ abstract class GameObject(var name: String) {
 
     fun placeObject(event: BlockPlaceEvent) {
         instantiate(this, event.block.location)
-        event.player.msg("You placed a engine.GameObject")
+        event.player.msg("You placed a me.aydie.GameObject")
         val blockNBT = NBTBlock(event.block)
         val itemNBT = NBTItem(event.itemInHand)
         blockNBT.data.setObject(Constants.NBT.SOLARIS_KEY, itemNBT.getObject(Constants.NBT.SOLARIS_KEY, NBTData::class.java))

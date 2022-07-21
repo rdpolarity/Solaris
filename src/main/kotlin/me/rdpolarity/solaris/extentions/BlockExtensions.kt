@@ -1,6 +1,6 @@
-package extentions
+package me.rdpolarity.solaris.extentions
 
-import data.Constants
+import me.rdpolarity.solaris.data.Constants
 import de.tr7zw.nbtapi.NBTBlock
 import de.tr7zw.nbtapi.NBTItem
 import org.bukkit.block.Block

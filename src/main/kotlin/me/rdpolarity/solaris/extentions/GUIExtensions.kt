@@ -1,4 +1,4 @@
-package extentions
+package me.rdpolarity.solaris.extentions
 
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.guis.ScrollingGui

@@ -1,0 +1,11 @@
+# Not generated
+main: me.rdpolarity.solaris.Solaris
+name: Solaris
+version: '1.0'
+description: Decoupled minigame engine
+author: RDPolarity
+softdepend:
+  - HolographicDisplays
+commands: {}
+permissions: {}
+api-version: '1.19'

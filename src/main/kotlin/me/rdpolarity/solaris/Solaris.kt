@@ -1,4 +1,6 @@
-import annotations.GamePrefab
+package me.rdpolarity.solaris
+
+import me.rdpolarity.solaris.annotations.GamePrefab
 import co.aikar.commands.BaseCommand
 import co.aikar.commands.BukkitCommandManager
 import co.aikar.commands.annotation.CommandAlias
@@ -6,17 +8,14 @@ import co.aikar.commands.annotation.Default
 import co.aikar.commands.annotation.Subcommand
 import de.tr7zw.nbtapi.NBTBlock
 import dev.triumphteam.gui.builder.item.ItemBuilder
-import engine.GameObject
-import engine.objects.LootChest
-import engine.objects.SpeedBoost
-import extentions.broadcast
+import me.rdpolarity.solaris.engine.GameObject
 import hazae41.minecraft.kutils.bukkit.BukkitPlugin
 import hazae41.minecraft.kutils.bukkit.info
 import hazae41.minecraft.kutils.bukkit.listen
 import hazae41.minecraft.kutils.bukkit.msg
 import io.github.classgraph.ClassGraph
-import managers.MapManager
-import managers.StateManager
+import me.rdpolarity.solaris.managers.MapManager
+import me.rdpolarity.solaris.managers.StateManager
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -29,23 +28,18 @@ import org.bukkit.plugin.java.annotation.plugin.Description
 import org.bukkit.plugin.java.annotation.plugin.Plugin
 import org.bukkit.plugin.java.annotation.plugin.author.Author
 import kotlin.reflect.KClass
-import kotlin.reflect.KFunction
 import kotlin.reflect.full.createInstance
-import kotlin.reflect.full.memberProperties
-import kotlin.reflect.full.valueParameters
-import kotlin.reflect.jvm.isAccessible
-import kotlin.reflect.jvm.kotlinFunction
-
-@Plugin(name="Solaris", version = "1.0")
-@ApiVersion(ApiVersion.Target.v1_16)
-@SoftDependency("HolographicDisplays")
-@Description("Decoupled minigame engine")
-@Author("RDPolarity")
+//
+//@Plugin(name="Solaris", version = "1.0")
+//@ApiVersion(ApiVersion.Target.v1_19)
+//@SoftDependency("HolographicDisplays")
+//@Description("Decoupled minigame engine")
+//@Author("RDPolarity")
 class Solaris : BukkitPlugin() {
     var test = ""
 
     override fun onEnable() {
-        info("Engine Enabled!")
+        info("Engine Enabled!!!!")
         val prefabs = getAllAnnotatedWith(GamePrefab::class).map { it.createInstance() as GameObject }
         MapManager.addPrefab(prefabs)
         MapManager.onEnable(this)
@@ -71,7 +65,6 @@ class Solaris : BukkitPlugin() {
 
         return ClassGraph()
             .enableAllInfo()
-            .acceptPackages("engine")
             .scan().use { scanResult ->
                 scanResult.getClassesWithAnnotation(annotationName).map {
                     it.loadClass().kotlin

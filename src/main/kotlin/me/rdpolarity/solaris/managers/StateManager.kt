@@ -1,10 +1,10 @@
-package managers
+package me.rdpolarity.solaris.managers
 
 import co.aikar.commands.BaseCommand
 import co.aikar.commands.annotation.CommandAlias
 import co.aikar.commands.annotation.Default
 import co.aikar.commands.annotation.Subcommand
-import extentions.broadcast
+import me.rdpolarity.solaris.extentions.broadcast
 import mobx.core.action
 import mobx.core.observable
 import org.bukkit.plugin.java.annotation.command.Command
@@ -19,7 +19,7 @@ object StateManager {
     var state by observable(STATE.EDIT)
 
     fun change(state: STATE) = action {
-        this.state = state
+        StateManager.state = state
     }
 
     @CommandAlias("state")

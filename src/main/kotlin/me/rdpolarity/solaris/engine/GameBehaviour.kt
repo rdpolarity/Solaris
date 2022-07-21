@@ -1,18 +1,16 @@
-package engine
+package me.rdpolarity.solaris.engine
 
-import extentions.asComponent
-import GUI.SolarisGUI
-import annotations.GameProperty
+import me.rdpolarity.solaris.extentions.asComponent
+import me.rdpolarity.solaris.GUI.SolarisGUI
+import me.rdpolarity.solaris.annotations.GameProperty
 import com.gmail.filoghost.holographicdisplays.api.Hologram
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI
-import de.slikey.effectlib.Effect
 import de.slikey.effectlib.EffectManager
-import de.slikey.effectlib.effect.AtomEffect
 import de.slikey.effectlib.effect.CubeEffect
 import de.slikey.effectlib.effect.HelixEffect
 import dev.triumphteam.gui.builder.item.ItemBuilder
-import managers.GizmoManager
-import managers.MapManager
+import me.rdpolarity.solaris.Solaris
+import me.rdpolarity.solaris.managers.GizmoManager
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Particle

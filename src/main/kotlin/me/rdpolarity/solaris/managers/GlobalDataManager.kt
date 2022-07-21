@@ -1,16 +1,10 @@
-package managers
+package me.rdpolarity.solaris.managers
 
-import data.Constants
+import me.rdpolarity.solaris.data.Constants
 import de.tr7zw.nbtapi.NBTBlock
 import de.tr7zw.nbtapi.NBTCompound
-import extentions.broadcast
-import extentions.debugLog
-import hazae41.minecraft.kutils.bukkit.msg
 import org.bukkit.Location
-import org.bukkit.Material
 import org.bukkit.World
-import org.bukkit.block.data.BlockData
-import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 
 /**

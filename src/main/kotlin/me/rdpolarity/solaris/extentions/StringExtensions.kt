@@ -1,6 +1,6 @@
-package extentions
+package me.rdpolarity.solaris.extentions
 
-import data.Constants
+import me.rdpolarity.solaris.data.Constants
 import hazae41.minecraft.kutils.textOf
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent

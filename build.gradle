@@ -2,12 +2,11 @@ plugins {
     id "org.jetbrains.kotlin.kapt" version "1.5.31"
     id 'org.jetbrains.kotlin.jvm' version '1.5.31'
     id 'com.github.johnrengelman.shadow' version '6.0.0'
-    id 'kr.entree.spigradle' version '2.4.2'
     id 'org.jetbrains.dokka' version '1.7.10'
 }
 
 // Variables
-def buildLocation = "C:\\Users\\rdpol\\Documents\\GitHub\\Servers\\server 1.16.5\\plugins"
+def buildLocation = "C:\\Users\\rdpol\\Documents\\GitHub\\Servers\\server 1.19\\plugins"
 
 // Properties
 group = 'me.rdpolarity.solaris'
@@ -15,6 +14,10 @@ version = '1.0'
 
 repositories {
     mavenCentral()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url = 'https://oss.sonatype.org/content/repositories/central' }
     maven { url "https://jitpack.io" }
     maven { url "https://repo.aikar.co/content/groups/aikar/" }
     maven { url "https://repo.mattstudios.me/artifactory/public/" }
@@ -26,7 +29,7 @@ repositories {
 }
 
 dependencies {
-    implementation spigot("1.16.5")
+    compileOnly 'org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT'
     implementation 'com.github.RomanPozdeev:MobX:0.1'
     implementation 'io.github.classgraph:classgraph:4.8.149'
     implementation "co.aikar:acf-bukkit:0.5.0-SNAPSHOT"
@@ -35,19 +38,21 @@ dependencies {
     implementation 'dev.triumphteam:triumph-gui:3.1.2'
     implementation "com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.0"
     implementation "org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT"
-    implementation "de.tr7zw:item-nbt-api-plugin:2.8.0"
+    implementation "de.tr7zw:item-nbt-api-plugin:2.10.0"
     implementation 'com.elmakers.mine.bukkit:EffectLib:9.4'
 
-    kapt "org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT"
+//    kapt "org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT"
 }
 
 shadowJar {
 //    relocate 'co.aikar.commands', 'me.rdpolarity.solaris.acf'
 //    relocate 'co.aikar.locales', 'me.rdpolarity.solaris.locales'
+    relocate 'de.tr7zw.nbtapi', 'me.rdpolarity.solaris.de.tr7zw.nbtapi'
 
-    archiveBaseName.set("Solaris")
-    archiveClassifier.set('')
+//    archiveBaseName.set("Solaris")
+//    archiveClassifier.set('')
     destinationDirectory.set(file(buildLocation))
+
 }
 
 jar {

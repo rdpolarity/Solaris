@@ -1,7 +1,7 @@
-package engine.behaviours
+package me.rdpolarity.solaris.engine.behaviours
 
-import annotations.GameProperty
-import engine.GameBehaviour
+import me.rdpolarity.solaris.annotations.GameProperty
+import me.rdpolarity.solaris.engine.GameBehaviour
 import org.bukkit.Material
 
 class ChanceToExplodeOnClick : GameBehaviour() {

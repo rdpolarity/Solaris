@@ -1,23 +1,21 @@
-package managers
+package me.rdpolarity.solaris.managers
 
-import GUI.SolarisGUI
-import extentions.isGameObject
-import engine.GameObject
-import Solaris
+import me.rdpolarity.solaris.GUI.SolarisGUI
+import me.rdpolarity.solaris.extentions.isGameObject
+import me.rdpolarity.solaris.engine.GameObject
 import co.aikar.commands.BaseCommand
 import co.aikar.commands.annotation.CommandAlias
 import co.aikar.commands.annotation.Default
 import co.aikar.commands.annotation.Subcommand
-import data.Constants
+import me.rdpolarity.solaris.data.Constants
 import de.tr7zw.nbtapi.NBTBlock
 import de.tr7zw.nbtapi.NBTItem
-import engine.objects.LootChest
-import extentions.broadcast
-import extentions.debugLog
+import me.rdpolarity.solaris.extentions.broadcast
+import me.rdpolarity.solaris.extentions.debugLog
 import hazae41.minecraft.kutils.bukkit.listen
+import me.rdpolarity.solaris.Solaris
 import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockBreakEvent
@@ -25,7 +23,6 @@ import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.plugin.java.annotation.command.Command
-import kotlin.reflect.KClass
 
 /**
  * The Map Manager handles keeping track of all objects in various worlds
@@ -175,7 +172,7 @@ object MapManager {
         @Subcommand("objects")
         fun onObjects(player: Player) { ObjectsGUI().open(player) }
 
-        @Subcommand("data")
+        @Subcommand("me/rdpolarity/solaris/dataydie/data")
         fun onData(player: Player) {
             GlobalDataManager.getData(player.world).toString().broadcast()
         }

@@ -1,9 +1,9 @@
-package engine.objects
+package me.rdpolarity.solaris.engine.objects
 
-import annotations.GamePrefab
-import data.Constants
-import engine.GameBehaviour
-import engine.GameObject
+import me.rdpolarity.solaris.annotations.GamePrefab
+import me.rdpolarity.solaris.data.Constants
+import me.rdpolarity.solaris.engine.GameBehaviour
+import me.rdpolarity.solaris.engine.GameObject
 
 @GamePrefab
 class SpeedBoost : GameObject("SpeedBooster") {

@@ -1,7 +1,7 @@
-package GUI
+package me.rdpolarity.solaris.GUI
 
-import extentions.asComponent
-import extentions.setBasicScrollTemplate
+import me.rdpolarity.solaris.extentions.asComponent
+import me.rdpolarity.solaris.extentions.setBasicScrollTemplate
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.guis.Gui
 import dev.triumphteam.gui.guis.ScrollingGui

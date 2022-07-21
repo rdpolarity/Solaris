@@ -1,14 +1,9 @@
-package engine.behaviours
+package me.rdpolarity.solaris.engine.behaviours
 
-import annotations.GameProperty
-import de.slikey.effectlib.effect.CubeEffect
-import de.slikey.effectlib.util.MathUtils
-import engine.GameBehaviour
-import extentions.broadcast
-import managers.GizmoManager
+import me.rdpolarity.solaris.annotations.GameProperty
+import me.rdpolarity.solaris.engine.GameBehaviour
 import org.bukkit.Location
 import org.bukkit.Material
-import org.bukkit.Particle
 
 class SpawnChestWithLoot : GameBehaviour() {
     override var name = "ChestSpawner"

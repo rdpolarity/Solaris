@@ -1,4 +1,4 @@
-package annotations
+package me.rdpolarity.solaris.annotations
 
 /**
  * This will add the tagged class to the '/map objects' GUI.

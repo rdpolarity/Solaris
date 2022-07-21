@@ -1,4 +1,4 @@
-package data
+package me.rdpolarity.solaris.data
 
 object Constants {
     object NBT {
