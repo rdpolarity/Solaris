@@ -89,10 +89,9 @@ class Solaris : BukkitPlugin() {
 
         @Default
         private fun onSolaris(player : Player) {
-            player.msg("Solaris is cool!!!!")
+            player.msg("Solaris ok cool")
         }
 
-        @Default
         @Subcommand("debug")
         private fun onTest(player : Player) {
             val debugStick = ItemBuilder.from(Material.STICK).asGuiItem().itemStack
