@@ -43,8 +43,8 @@ class Solaris : BukkitPlugin() {
         val prefabs = getAllAnnotatedWith(GamePrefab::class).map { it.createInstance() as GameObject }
         MapManager.addPrefab(prefabs)
         MapManager.onEnable(this)
-
-        val commandManager = BukkitCommandManager(this).apply {
+        
+        BukkitCommandManager(this).apply {
             registerCommand(Commands())
             registerCommand(MapManager.Commands())
             registerCommand(StateManager.Commands())
@@ -59,10 +59,15 @@ class Solaris : BukkitPlugin() {
         }
     }
 
+    /**
+     * At runtime, this will do a classpath analysis and find all classes that have been
+     * annotated with @[GamePrefab]. This will need to be may need to be extended to other
+     * plugins.
+     */
     @Throws(Exception::class)
     fun getAllAnnotatedWith(annotation: KClass<out Annotation>): List<KClass<*>> {
         val annotationName = annotation.java.canonicalName
-
+        
         return ClassGraph()
             .enableAllInfo()
             .scan().use { scanResult ->

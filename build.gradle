@@ -6,7 +6,7 @@ plugins {
 }
 
 // Variables
-def buildLocation = "C:\\Users\\rdpol\\Documents\\GitHub\\Servers\\server 1.19\\plugins"
+// def buildLocation = "C:\\Users\\rdpol\\Documents\\GitHub\\Servers\\server 1.19\\plugins"
 
 // Properties
 group = 'me.rdpolarity.solaris'
@@ -26,7 +26,6 @@ repositories {
 }
 
 dependencies {
-//    compileOnly 'org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT'
     compileOnly 'io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT'
     implementation 'com.github.RomanPozdeev:MobX:0.1'
     implementation 'io.github.classgraph:classgraph:4.8.149'
@@ -52,7 +51,6 @@ shadowJar {
     archiveBaseName.set("Solaris")
     archiveClassifier.set('')
     destinationDirectory.set(file(buildLocation))
-
 }
 
 jar {
